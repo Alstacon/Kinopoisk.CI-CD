@@ -18,10 +18,10 @@ jobs:
     steps:
       - name: clone code
         uses: actions/checkout@v2
-        - uses: anthonykgross/ansible-vault-cli-github-action@v1
-          with:
-            vault_key: ${{ secrets.VAULT_PASSWORD }}
-            command: "ansible-vault decrypt deploy/.env"
+      - uses: anthonykgross/ansible-vault-cli-github-action@v1
+        with:
+          vault_key: ${{ secrets.VAULT_PASSWORD }}
+          command: "ansible-vault decrypt deploy/.env"
       - name: render configs
         run: |
           envsubst '$DOCKER_HUB_USERNAME' < deploy/docker-compose.yaml > deploy/tmp.docker-compose.yaml
