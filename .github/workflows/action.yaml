@@ -1,0 +1,11 @@
+name: Build and deploy
+on: [push]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: docker build
+        run: docker build -t alstacon/skypro_film:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+
