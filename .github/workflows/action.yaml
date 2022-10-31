@@ -2,7 +2,7 @@ name: Build and deploy
 on: [push]
 jobs:
   build_and_push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: clone code
         uses: actions/checkout@v2
@@ -12,4 +12,29 @@ jobs:
         run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER_NAME }} --password-stdin
       - name: docker push
         run: docker push alstacon/skypro_film:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+        - uses: anthonykgross/ansible-vault-cli-github-action@v1
+          with:
+            vault_key: ${{ secrets.VAULT_PASSWORD }}
+            command: "ansible-vault decrypt deploy/.env"
+      - name: render configs
+        run: |
+          envsubst '$DOCKER_HUB_USERNAME' < deploy/docker-compose.yaml > deploy/tmp.docker-compose.yaml
+          mv deploy/tmp.docker-compose.yaml deploy/docker-compose.yaml
+      - name: copy on server
+        uses: appleboy/scp-action@master
+          with:
+            host: ${{ secrets.SSH_HOST }}
+            username: ${{ secrets.SSH_USERNAME }}
+            password: ${{ secrets.SSH_PASSWORD }}
+            source: "deploy/*"
+            target: film_app
+            strip_components: 1
+          
+
 
