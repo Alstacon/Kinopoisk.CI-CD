@@ -15,6 +15,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-22.04
+    needs: build_and_push
     steps:
       - name: clone code
         uses: actions/checkout@v2
