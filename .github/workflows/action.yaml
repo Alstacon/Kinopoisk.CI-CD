@@ -40,8 +40,8 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd film_app
-            docker compose pull -q
-            docker compose up -d
+            sudo docker compose pull -q
+            sudo docker compose up -d
       - name: Clear after deploy
         if: always()
         uses: appleboy/ssh-action@master
