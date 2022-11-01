@@ -24,9 +24,9 @@ class Director(models.Base):
 class Movie(models.Base):
     __tablename__ = 'movie'
 
-    title = Column(String(255), nullable=False)
-    description = Column(String(255), nullable=False)
-    trailer = Column(String(255), nullable=False)
+    title = Column(String(500), nullable=False)
+    description = Column(String(1500), nullable=False)
+    trailer = Column(String(500), nullable=False)
     year = Column(Integer, nullable=False)
     rating = Column(Float, nullable=False)
     genre_id = Column(Integer, ForeignKey(f'{Genre.__tablename__}.id'), nullable=False)
@@ -36,11 +36,6 @@ class Movie(models.Base):
     director = db.relationship("Director", back_populates='movies')
 
 
-# class Favorites(db.Model):
-#     __tablename__ = 'favorites'
-#
-#     user_id = Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
-#     movie_id = Column('movie_id', db.Integer, db.ForeignKey('movie.id'), primary_key=True, nullable=False)
 
 favorites = db.Table(
     'favorites',
