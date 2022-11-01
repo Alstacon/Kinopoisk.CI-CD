@@ -16,7 +16,7 @@ services:
       - pg_data_flask:/var/lib/postgresql/data
 
   api:
-    image: alstacon/skypro_film:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    image: alstacon/skypro_film:latest
     restart: always
     env_file:
       - ./.env
