@@ -32,6 +32,16 @@ jobs:
           source: "deploy/*"
           target: film_app
           strip_components: 1
+      - name: deploy
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd film_app
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
+            
           
 
 
