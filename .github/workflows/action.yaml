@@ -6,12 +6,21 @@ jobs:
     steps:
       - name: clone code
         uses: actions/checkout@v2
-      - name: docker build
-        run: docker build -t alstacon/skypro_film:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKER_USER_NAME }}/skypro_film
       - name: docker login
-        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER_NAME }} --password-stdin
-      - name: docker push
-        run: docker push alstacon/skypro_film:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USER_NAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: docker build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
 
   deploy:
     runs-on: ubuntu-22.04
