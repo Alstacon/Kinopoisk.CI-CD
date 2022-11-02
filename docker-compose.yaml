@@ -12,8 +12,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    ports:
-      - "5432:5432"
     volumes:
       - pg_data_flask:/var/lib/postgresql/data
 
@@ -32,11 +30,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    healthcheck:
-      test: curl -sS http://127.0.0.1:5000/ping/ || exit 1
-      interval: 15s
-      timeout: 5s
-      retries: 5
+      migrations:
+        condition: service_completed_successfully
+
+  migrations:
+    build:
+      context: .
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    command: flask db upgrade
 
 
 volumes:

@@ -24,7 +24,7 @@ class Director(models.Base):
 class Movie(models.Base):
     __tablename__ = 'movie'
 
-    title = Column(String(500), nullable=False)
+    title = Column(String(1000), nullable=False)
     description = Column(String(1500), nullable=False)
     trailer = Column(String(500), nullable=False)
     year = Column(Integer, nullable=False)
