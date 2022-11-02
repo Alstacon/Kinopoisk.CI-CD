@@ -30,18 +30,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      migrations:
-        condition: service_completed_successfully
 
-  migrations:
-    build:
-      context: .
-    environment:
-      POSTGRES_HOST: db
-    depends_on:
-      db:
-        condition: service_healthy
-    command: flask db upgrade
+
 
 
 volumes:

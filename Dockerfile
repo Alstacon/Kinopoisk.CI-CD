@@ -13,7 +13,7 @@ RUN apt-get update -y \
 
 COPY requirements.txt .
 
-RUN python3 -m pip install -r requirements.txt
+RUN python3 -m pip install --no-cache -r requirements.txt
 
 COPY . .
 
