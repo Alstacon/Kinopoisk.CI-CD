@@ -33,13 +33,5 @@ services:
       timeout: 5s
       retries: 5
 
-  migrations:
-    environment:
-      POSTGRES_HOST: db
-    depends_on:
-      db:
-        condition: service_healthy
-    command: flask db upgrade
-
 volumes:
   pg_data_flask:
