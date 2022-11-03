@@ -31,6 +31,11 @@ services:
       db:
         condition: service_healthy
 
+  front:
+    image: painassasin/node_cource_project:latest
+    ports:
+      - "80:3000"
+
 
 
 

@@ -29,7 +29,7 @@ class BaseConfig:
 
     DEBUG = False
 
-    SQLALCHEMY_DATABASE_URI = "postgresql://{username}:{password}@{host}:{port}/{db_name}".format(
+    SQLALCHEMY_DATABASE_URI = "postgresql://{username}:{password}@{host}/{db_name}".format(
         username=os.getenv('POSTGRES_USER'),
         password=os.getenv('POSTGRES_PASSWORD'),
         host=os.getenv('POSTGRES_HOST', '127.0.0.1'),
