@@ -11,6 +11,8 @@ services:
       - "5000:5000"
     volumes:
       - ./docker_config.py:/code/project/config.py
+    environment:
+      POSTGRES_HOST: db
     depends_on:
       pg:
         condition: service_healthy
