@@ -1,6 +1,5 @@
-#!/bin/bash
-export FLASK_APP=run
-export FLASK_ENV=production
-python create_tables.py
-python load_fixtures.py
-exec "$@"
+
+## entrypoint.sh
+python3.10 create_tables.py
+python3.10 load_fixtures.py
+flask run -h 0.0.0.0 -p 5000

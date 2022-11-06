@@ -1,7 +1,20 @@
 version: "3.9"
 
 services:
-  db:
+  front:
+    image: painassasin/node_cource_project:latest
+    ports:
+      - "80:3000"
+  api:
+    image: alstacon/skypro_film:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./docker_config.py:/code/project/config.py
+    depends_on:
+      pg:
+        condition: service_healthy
+  pg:
     image: postgres:latest
     environment:
       POSTGRES_USER: $DB_USER
@@ -10,29 +23,11 @@ services:
     volumes:
       - pg_data_flask:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME" ]
+      test: ["CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  api:
-    image: alstacon/skypro_film:latest
-    restart: always
-    env_file:
-      - ./.env
-    environment:
-      POSTGRES_HOST: db
-    ports:
-      - "5000:5000"
-    depends_on:
-      db:
-        condition: service_healthy
-
-  front:
-    image: painassasin/node_cource_project:latest
-    ports:
-      - "80:3000"
-
-
 volumes:
   pg_data_flask:
+

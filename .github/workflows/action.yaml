@@ -55,3 +55,51 @@ jobs:
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
       
 
+name: Build and deploy workflow
+on: [push]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: docker build
+        run: docker build -t alstacon/skypro_film:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+      - name: docker login
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER_NAME }} --password-stdin
+      - name: docker push
+        run: docker push alstacon/skypro_film:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      DB_NAME: ${{ secrets.POSTGRES_DB }}
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: render configs
+        run: |
+          mkdir film_app
+          cat deploy/docker-compose.yaml | envsubst > film_app/docker-compose.yaml
+          cat deploy/.env | envsubst > film_app/.env
+        name: copy files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "film_app/docker-compose.yaml,film_app/.env"
+          target: "kinopoisk"
+          strip_components: 1
+      - name: deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd kinopoisk
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose pull
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d

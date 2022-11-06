@@ -1,24 +1,19 @@
 FROM python:3.10-slim
 
-WORKDIR /opt/movies
+# set work directory
+WORKDIR /code
 
-ENV FLASK_APP=run.py \
-    FLASK_ENV=production
+# set environment variables
+ENV FLASK_APP=run.py
+ENV FLASK_DEBUG=1
 
-
-RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends curl \
-    && apt-get autoclean && apt-get autoremove \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /vat/tmp/*
-
+# install dependencies
 COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-RUN python3 -m pip install --no-cache -r requirements.txt
-
+# copy project
 COPY . .
 
-ENTRYPOINT ["bash", "entrypoint.sh"]
-
-EXPOSE 5000
-
-CMD ["flask", "run", "-h", "0.0.0.0", "-p", "5000"]
+# run flask
+CMD ["sh", "entrypoint.sh"]
