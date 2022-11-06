@@ -27,7 +27,7 @@ jobs:
           mkdir film_app
           cat deploy/docker-compose.yaml | envsubst > film_app/docker-compose.yaml
           cat deploy/.env | envsubst > film_app/.env
-        name: copy files to server
+      - name: copy files to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
