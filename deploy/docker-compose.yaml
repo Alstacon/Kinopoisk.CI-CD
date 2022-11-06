@@ -9,8 +9,6 @@ services:
     image: alstacon/skypro_film:latest
     ports:
       - "5000:5000"
-    volumes:
-      - ./docker_config.py:/code/project/config.py
     environment:
       POSTGRES_HOST: pg
     depends_on:

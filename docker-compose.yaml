@@ -21,7 +21,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: alstacon/skypro_film
+    image: alstacon/skypro_film:latest
     restart: always
     environment:
       POSTGRES_HOST: pg
