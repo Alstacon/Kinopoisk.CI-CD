@@ -5,10 +5,19 @@ services:
     image: painassasin/node_cource_project:latest
     ports:
       - "80:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
   api:
     image: alstacon/skypro_film:latest
     ports:
       - "5000:5000"
+    healthcheck:
+      test: curl -sS http://127.0.0.1:5000 || exit 1
+      interval: 3s
+      timeout: 3s
+      retries: 5
     environment:
       POSTGRES_HOST: pg
     depends_on:
