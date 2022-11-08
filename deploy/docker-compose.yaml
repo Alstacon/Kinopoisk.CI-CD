@@ -4,10 +4,12 @@ services:
   front:
     image: painassasin/node_cource_project:latest
     ports:
-      - "80:3000"
+      - "80:80"
     depends_on:
       api:
         condition: service_healthy
+    networks:
+      - front
 
   api:
     image: alstacon/skypro_film:latest
@@ -23,8 +25,11 @@ services:
     depends_on:
       pg:
         condition: service_healthy
+    networks:
+      - back
+      - front
   pg:
-    image: postgres:latest
+    image: postgres:13.0-alpine
     environment:
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
@@ -32,11 +37,19 @@ services:
     volumes:
       - pg_data_flask:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME"]
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - back
 
 volumes:
   pg_data_flask:
+
+networks:
+  back:
+    driver: bridge
+  front:
+    driver: bridge
 
