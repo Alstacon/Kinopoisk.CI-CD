@@ -1,39 +1,14 @@
 version: "3.9"
 
 services:
-  front:
-    image: painassasin/node_cource_project:latest
-    ports:
-      - "80:80"
-    depends_on:
-      api:
-        condition: service_healthy
-    networks:
-      - front
-
-  api:
-    image: alstacon/skypro_film:latest
-    ports:
-      - "5000:5000"
-    healthcheck:
-      test: curl -sS http://127.0.0.1:5000 || exit 1
-      interval: 3s
-      timeout: 3s
-      retries: 5
-    environment:
-      POSTGRES_HOST: pg
-    depends_on:
-      pg:
-        condition: service_healthy
-    networks:
-      - back
-      - front
   pg:
     image: postgres:latest
     environment:
-      POSTGRES_USER: $DB_USER
-      POSTGRES_PASSWORD: $DB_PASSWORD
-      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
     volumes:
       - pg_data_flask:/var/lib/postgresql/data
     healthcheck:
@@ -44,6 +19,38 @@ services:
     networks:
       - back
 
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: alstacon/skypro_film:latest
+    restart: always
+    environment:
+      POSTGRES_HOST: pg
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: curl -sS http://127.0.0.1:5000 || exit 1
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    depends_on:
+      pg:
+        condition: service_healthy
+    networks:
+      - back
+      - front
+
+  front:
+    image: painassasin/node_cource_project:latest
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - front
+
 volumes:
   pg_data_flask:
 
@@ -52,4 +59,3 @@ networks:
     driver: bridge
   front:
     driver: bridge
-
