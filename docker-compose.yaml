@@ -16,7 +16,7 @@ services:
     ports:
       - "5000:5000"
     healthcheck:
-      test: curl -sS http://172.28.0.3:5000 || exit 1
+      test: curl -sS http://127.0.0.1:5000 || exit 1
       interval: 3s
       timeout: 3s
       retries: 5
