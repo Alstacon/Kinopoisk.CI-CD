@@ -28,12 +28,7 @@ services:
     environment:
       POSTGRES_HOST: pg
     ports:
-      - "5000:5000"
-    healthcheck:
-      test: curl -sS http://127.0.0.1:5000 || exit 1
-      interval: 3s
-      timeout: 3s
-      retries: 5
+      - "5000:5000
     depends_on:
       pg:
         condition: service_healthy
@@ -45,9 +40,6 @@ services:
     image: painassasin/node_cource_project:latest
     ports:
       - "80:80"
-    depends_on:
-      api:
-        condition: service_healthy
     networks:
       - front
 
