@@ -43,7 +43,16 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd kinopoisk
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose pull
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
+            docker compose pull -q
+            docker compose up -d
+      - name: Clear after deploy
+        if: always()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            docker system prune -a -f
             
             
