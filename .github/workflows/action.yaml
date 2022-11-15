@@ -26,14 +26,14 @@ jobs:
         with:
           vault_key: ${{ secrets.VAULT_PASSWORD }}
           command: "ansible-vault decrypt deploy/.env"
-      - name: copy files to server
+      - name: Copy on server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "film_app/docker-compose.yaml,film_app/.env"
-          target: "kinopoisk"
+          source: "deploy/*"
+          target: kinopoisk
           strip_components: 1
       - name: deploy app
         uses: appleboy/ssh-action@master
