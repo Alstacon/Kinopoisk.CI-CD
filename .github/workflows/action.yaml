@@ -45,3 +45,5 @@ jobs:
             cd kinopoisk
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose pull
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
+            
+            
