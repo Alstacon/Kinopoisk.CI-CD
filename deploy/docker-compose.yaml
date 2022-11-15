@@ -29,7 +29,7 @@ services:
     volumes:
       - pg_data_flask:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME" ]
+      test: pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}
       interval: 5s
       timeout: 5s
       retries: 5
