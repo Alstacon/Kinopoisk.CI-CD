@@ -33,7 +33,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "film_app/docker-compose.yaml,film_app/.env"
+          source: "kinopoisk/docker-compose.yaml,kinopoisk/.env"
           target: "kinopoisk"
           strip_components: 1
       - name: deploy app
