@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v2
       - name: render configs
         run: |
-          mkdir film_app
+          mkdir kinopoisk
           cat deploy/docker-compose.yaml | envsubst > film_app/docker-compose.yaml
           cat deploy/.env | envsubst > film_app/.env
       - name: copy files to server
